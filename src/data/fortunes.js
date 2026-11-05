@@ -1,6 +1,13 @@
 // Built-in client-side datasets for "Xin Quẻ":
-// 1. "Hôm nay ăn gì" (FOOD_ORACLES)
-// 2. "Hôm nay đi đâu" (PLACE_ORACLES)
+// 1. "Hôm nay ăn gì" (FOOD_ORACLES - 100 unique sassy fortunes)
+// 2. "Hôm nay đi đâu" (PLACE_ORACLES - 100 unique sassy fortunes)
+
+import { FOOD_ORACLES_LOW } from './foodOraclesLow.js';
+import { FOOD_ORACLES_MID } from './foodOraclesMid.js';
+import { FOOD_ORACLES_HIGH } from './foodOraclesHigh.js';
+import { PLACE_ORACLES_LOW } from './placeOraclesLow.js';
+import { PLACE_ORACLES_MID } from './placeOraclesMid.js';
+import { PLACE_ORACLES_HIGH } from './placeOraclesHigh.js';
 
 export const BUDGET_OPTIONS = [
   { value: 'low', label: '🍃 Mỏng ví (<60k)', shortLabel: 'Dưới 60k' },
@@ -15,371 +22,59 @@ export const COMPANY_OPTIONS = [
 ];
 
 export const FOOD_ORACLES = [
-  // === LOW BUDGET (<60k) ===
-  {
-    id: 'food-com-tam-bi-cha',
-    code: 'QUẺ ĂN #01 • CỨU ĐÓI HẮC HOẢ',
-    budgets: ['low'],
-    companies: ['solo'],
-    title: '🍛 Cơm Tấm Sườn Bì Chả Trứng Ốp Lòng Đào',
-    priceNote: '💸 42k – 55k',
-    vibeNote: '🧘 Ngồi bàn inox một mình, chan mỡ hành không nhìn ai',
-    roast: 'Ví mỏng như tờ sớ rách mà đòi sang chảnh gì tầm này? Dobby phán: tấp ngay vào quán cơm tấm khói mù mịt, chọc vỡ cái trứng ốp la cho trôi hết nỗi nhục deadline đi!',
-    poem: 'Khói sườn thơm ngát đầu hẻm sâu,\nĂn no một dĩa bớt u sầu!',
-    tip: '🧂 Bí kíp Dobby: Xin thêm chén nước mắm kẹo ớt băm, cấm gọi thêm sườn cây kẻo lố ngân sách.',
-  },
-  {
-    id: 'food-banh-mi-chao',
-    code: 'QUẺ ĂN #02 • NÓNG BỎNG TAY',
-    budgets: ['low'],
-    companies: ['solo', 'couple'],
-    title: '🥖 Bánh Mì Chảo Pate Trứng Xíu Mại Xèo Xèo',
-    priceNote: '💸 38k – 58k / phần',
-    vibeNote: '🔥 Chảo gang sôi sùng sục, chấm tới đâu tỉnh tới đó',
-    roast: 'Tài khoản kêu cứu nhưng cái bụng lại gào thét đòi đồ Tây? Bánh mì chảo vỉa hè là chân ái cho chiếc ví hấp hối của bồ hôm nay đấy!',
-    poem: 'Pate béo ngậy quyện sốt hồng,\nCắn giòn ổ nóng ấm cả lòng.',
-    tip: '🥤 Gọi kèm ly sữa đậu nành đá 10k là tròn bài quý tộc nghèo vượt khó.',
-  },
-  {
-    id: 'food-bun-rieu-oc',
-    code: 'QUẺ ĂN #03 • CHUA CAY TỈNH NGỘ',
-    budgets: ['low'],
-    companies: ['solo', 'couple'],
-    title: '🍜 Bún Riêu Cua Ốc Giò Đậu Hũ Mắm Tôm',
-    priceNote: '💸 40k – 55k / tô',
-    vibeNote: '🌿 Húp nước lèo chua thanh giải độc nghiệp chướng',
-    roast: 'Mặt bồ đang xám xịt như tất chưa giặt 3 tuần kìa! Húp ngay tô bún riêu thêm một muỗng mắm tôm đậm đặc để mùi đời át mùi drama công sở.',
-    poem: 'Riêu cua vàng óng dậy mùi thơm,\nChẳng thèm nhăn nhó chuyện áo cơm.',
-    tip: '🦷 Nhớ xin tăm và kẹo bạc hà sau khi ăn nếu chiều nay còn dám mở miệng họp tiếp.',
-  },
-  {
-    id: 'food-xiu-mai-banh-trang',
-    code: 'QUẺ ĂN #04 • XẾ CHIỀU TỤ HỘI',
-    budgets: ['low'],
-    companies: ['couple', 'group'],
-    title: '🥟 Combo Bánh Tráng Nướng + Chén Trứng & Cá Viên Chiên',
-    priceNote: '💸 35k – 55k / người',
-    vibeNote: '🪑 Ngồi ghế nhựa thấp tám chuyện thiên hạ tới khuya',
-    roast: 'Đi đông mà đứa nào cũng than hết tiền thì dẹp ngay giấc mơ nhà hàng máy lạnh! Ra xe cá viên chiên đầu ngõ, chia bill mỗi đứa 45 cành vẫn nói xấu sếp được 3 tiếng.',
-    poem: 'Ghế nhựa vỉa hè gió thổi ngang,\nÍt tiền nhiều chuyện vẫn rộn ràng!',
-    tip: '🌶️ Đứa nào đòi gọi thêm trà sữa full topping thì bắt nó tự trả riêng.',
-  },
-  {
-    id: 'food-chao-suon-quay',
-    code: 'QUẺ ĂN #05 • ÊM BỤNG ĐÊM ĐEN',
-    budgets: ['low'],
-    companies: ['solo', 'group'],
-    title: '🥣 Cháo Sườn Sụn Quẩy Giòn Rắc Tiêu Bắc',
-    priceNote: '💸 35k – 50k / tô',
-    vibeNote: '🌙 Ấm bụng nhẹ ví, cứu rỗi tâm hồn suy kiệt',
-    roast: 'Dạ dày biểu tình, ví tiền thở oxy — Dobby nhìn thấu hết rồi! Một tô cháo sườn sánh mịn ngập quẩy giòn là ân huệ duy nhất vũ trụ ban cho bồ hôm nay.',
-    poem: 'Cháo nóng quẩy giòn rắc chút tiêu,\nĐời bớt chua cay được khá nhiều.',
-    tip: '🥄 Đừng khuấy mạnh tay kẻo cháo vữa nhanh như lời hứa tăng lương.',
-  },
-  {
-    id: 'food-nem-nuong-cuon',
-    code: 'QUẺ ĂN #06 • CUỐN SẠCH PHIỀN NÃO',
-    budgets: ['low', 'mid'],
-    companies: ['couple', 'group'],
-    title: '🥬 Nem Nướng Nha Trang Mẹt Rau Tương Đậu Phộng',
-    priceNote: '💸 50k – 65k / người',
-    vibeNote: '🥢 Tự tay cuốn bánh tráng giòn rụm chấm sốt sánh đặc',
-    roast: 'Hai ba cái miệng đói meo mà ngân sách khiêm tốn? Gọi mẹt nem nướng về tự cuốn cho tay chân bận rộn, đỡ bấm điện thoại nhắn tin cho người cũ!',
-    poem: 'Rau xanh ram giòn quyện sốt tương,\nCuốn trôi hết thảy mọi nhiễu nhương.',
-    tip: '🧄 Nhớ cắn kèm tép tỏi sống và ớt hiểm cho tỉnh táo đường tình duyên.',
-  },
-
-  // === MID BUDGET (60k–180k) ===
-  {
-    id: 'food-bun-bo-hue-dac-biet',
-    code: 'QUẺ ĂN #07 • ĐẠI BỔ HẮC HOẢ',
-    budgets: ['mid'],
-    companies: ['solo', 'couple'],
-    title: '🍲 Bún Bò Huế Đặc Biệt Nạm Gân Chả Cua Sa Tế',
-    priceNote: '💸 65k – 95k / tô',
-    vibeNote: '🌶️ Cay nồng sả ớt, mồ hôi tuôn tới đâu sảng khoái tới đó',
-    roast: 'Ví hôm nay chưa tới nỗi rách nát! Tự thưởng tô bún bò full topping nạm gân sụn giòn để lấy sức chiến đấu với đám người phàm ngoài kia đi phù thuỷ.',
-    poem: 'Sả nồng sa tế đỏ au tô,\nNạp đầy nguyên khí hết xô bồ!',
-    tip: '👕 Mặc áo trắng thì đeo tạp dề hoặc cúi sát tô, Dobby không giặt hộ vết sa tế đâu.',
-  },
-  {
-    id: 'food-ramen-solo',
-    code: 'QUẺ ĂN #08 • GÓC KHUẤT ĐỘC HÀNH',
-    budgets: ['mid'],
-    companies: ['solo'],
-    title: '🍜 Ramen Tonkotsu Hầm Xương 12 Tiếng + Trứng Ngâm Tương',
-    priceNote: '💸 115k – 165k',
-    vibeNote: '🧘 Ngồi quầy gỗ vách ngăn riêng tư chuẩn hướng nội',
-    roast: 'Đi ăn một mình mà sợ người quen bắt gặp hả? Chui ngay vào quầy Ramen vách ngăn cá nhân, kéo rèm trúc xuống là cả thế giới biến mất khỏi tầm mắt bồ!',
-    poem: 'Quầy gỗ một mình húp sợi dai,\nMặc kệ ngoài kia chuyện đúng sai.',
-    tip: '🥚 Gọi thêm nửa quả trứng lòng đào, húp cạn nước súp cho bõ tiền.',
-  },
-  {
-    id: 'food-mi-y-pizza-couple',
-    code: 'QUẺ ĂN #09 • LÃNG MẠN VỪA TÚI',
-    budgets: ['mid'],
-    companies: ['couple'],
-    title: '🍕 Pizza Đế Củi Phô Mai Chảy & Mì Ý Cua Kem Béo',
-    priceNote: '💸 130k – 175k / người',
-    vibeNote: '🕯️ Ánh đèn vàng ấm, chia đôi chiếc bánh không lo cháy túi',
-    roast: 'Đi hai người muốn có ảnh đẹp sống ảo nhưng vẫn sợ nhìn hoá đơn phát khóc? Quán Pizza – Pasta ấm cúng chia đôi bill trăm rưỡi mỗi người là nước đi khôn ngoan nhất của bồ hôm nay!',
-    poem: 'Phô mai kéo sợi ấm đêm dài,\nVí tiền còn thở, chẳng bi ai.',
-    tip: '🧀 Nhớ dặn chia nửa hai vị trên một đế bánh để khỏi cãi nhau.',
-  },
-  {
-    id: 'food-lau-bo-nhung-dam',
-    code: 'QUẺ ĂN #10 • XÌ XỤP HỘI ĐỒNG',
-    budgets: ['mid'],
-    companies: ['couple', 'group'],
-    title: '🥘 Bò Nhúng Dấm / Lẩu Thái Chua Cay Cuốn Bánh Tráng',
-    priceNote: '💸 120k – 170k / người',
-    vibeNote: '🍻 Nồi lẩu nghi ngút khói, càng đông gắp càng hăng',
-    roast: 'Tụ tập hội bạn mà ngồi nhai đồ khô là dở rồi! Chốt ngay nồi bò nhúng dấm chua dịu thơm mùi dứa sả, vừa nhúng vừa xả hết uất ức tuần qua cho Dobby!',
-    poem: 'Nồi sôi nghi ngút khói bay cao,\nGắp nhanh kẻo hết miếng bắp đào!',
-    tip: '🥩 Quy tắc sinh tồn: thả thịt vào giữ nguyên trên đũa 8 giây, buông ra là mất dấu.',
-  },
-  {
-    id: 'food-com-nieu-ca-kho',
-    code: 'QUẺ ĂN #11 • CƠM NHÀ ẤM BỤNG',
-    budgets: ['mid'],
-    companies: ['solo', 'couple', 'group'],
-    title: '🍚 Cơm Niêu Cháy Giòn + Cá Bống Kho Tộ & Canh Cua Mồng Tơi',
-    priceNote: '💸 85k – 145k / người',
-    vibeNote: '🏡 Hương vị quê nhà vỗ về chiếc bụng ăn hàng quán quá nhiều',
-    roast: 'Suốt ngày trà sữa với đồ chiên dầu mỡ bảo sao mặt mũi hốc hác! Giáo Chủ ra lệnh hôm nay đi ăn cơm niêu canh rau đàng hoàng để hồi phục nhân phẩm lẫn hệ tiêu hoá.',
-    poem: 'Cơm niêu cháy cạnh quyện tiêu cay,\nCanh cua mát ruột tỉnh cơn say.',
-    tip: '🍆 Chừa bụng cho dĩa cà pháo mắm tôm giòn tan, ăn hao cơm gấp đôi.',
-  },
-  {
-    id: 'food-oc-sai-gon',
-    code: 'QUẺ ĂN #12 • ĐẠI TIỆC VỎ SÒ',
-    budgets: ['mid'],
-    companies: ['group'],
-    title: '🐚 Ốc Hương Xào Bơ Tỏi + Sò Điệp Nướng Mỡ Hành Chấm Bánh Mì',
-    priceNote: '💸 130k – 180k / người',
-    vibeNote: '🔥 Bàn ốc rộn rã tiếng cười, chấm cạn giọt sốt bơ tỏi cuối cùng',
-    roast: 'Hội nhóm đang ngứa miệng muốn bàn chuyện thiên hạ thì không đâu hợp phong thuỷ bằng quán ốc! Tay lễ ốc, miệng chấm bánh mì bơ tỏi — combo giải nghiệp đỉnh cao!',
-    poem: 'Bơ tỏi thơm lừng quyện mỡ hành,\nBao nhiêu phiền muộn hoá mong manh.',
-    tip: '🥖 Gọi dư thêm 3 ổ bánh mì nóng vì sốt bơ tỏi luôn hết trước ốc.',
-  },
-
-  // === HIGH BUDGET (200k+) ===
-  {
-    id: 'food-omakase-sushi-solo',
-    code: 'QUẺ ĂN #13 • ĐẠI GIA TỰ THƯỞNG',
-    budgets: ['high'],
-    companies: ['solo', 'couple'],
-    title: '🍣 Set Sashimi Cá Hồi Bụng Béo & Cơm Lươn Nhật Nướng Than',
-    priceNote: '💸 260k – 450k / người',
-    vibeNote: '✨ Ngồi quầy bar gỗ tuyết tùng, từng miếng cá tan trong miệng',
-    roast: 'Á à, nay lương mới tinh tinh hay vừa trúng mánh mà dám chọn mức Xả Láng? Đã máu thì quất hẳn set Sashimi bụng cá hồi béo ngậy với cơm lươn Unagi cho bõ những ngày cày cuốc!',
-    poem: 'Cá tươi béo mịn quyện mù tạt,\nTiêu tiền đúng chỗ sướng dạt dào!',
-    tip: '🍵 Nhấp trà xanh nóng xen kẽ gừng hồng để cảm nhận trọn vị ngọt của cá.',
-  },
-  {
-    id: 'food-steak-ruou-vang',
-    code: 'QUẺ ĂN #14 • THƯỢNG LƯU HẮC ÁM',
-    budgets: ['high'],
-    companies: ['solo', 'couple'],
-    title: '🥩 Bít Tết Thăn Ngoại Bò Mỹ Medium-Rare Sốt Tiêu Đen & Khoai Nghiền',
-    priceNote: '💸 280k – 520k / người',
-    vibeNote: '🕯️ Ánh nến lung linh, cắt miếng thịt mềm mọng chuẩn quý tộc',
-    roast: 'Ví dày thế này mà còn phân vân hả phù thuỷ? Lên đồ đi cắt miếng Steak Medium-Rare mọng nước dưới ánh nến mờ ảo — đi một mình thì ngầu lạnh lùng, đi hai người thì điểm cộng tuyệt đối!',
-    poem: 'Dao sắc cắt mềm thớ thịt thơm,\nĐêm nay sang chảnh chẳng lo cơm.',
-    tip: '🍷 Đừng lỡ mồm gọi Medium-Well nếu không muốn nhai cục tẩy cao su đắt tiền.',
-  },
-  {
-    id: 'food-bbq-nuong-than-hoa',
-    code: 'QUẺ ĂN #15 • KHÓI LỬA XẢ LÁNG',
-    budgets: ['high'],
-    companies: ['couple', 'group'],
-    title: '🔥 Thịt Nướng Hàn Quốc Dẻ Sườn Bò & Má Heo Iberico Cuốn Lá Vừng',
-    priceNote: '💸 250k – 390k / người',
-    vibeNote: '🍻 Tiếng thịt xèo xèo trên than hồng, panchan gọi thêm không giới hạn',
-    roast: 'Tụ tập hội bạn trong ngày ví rủng rỉnh thì phải nghe tiếng thịt nướng xèo xèo trên vỉ than hồng! Gói miếng dẻ sườn bò với tỏi nướng và lá vừng, bao nhiêu uất ức bay theo ống hút khói hết!',
-    poem: 'Than hồng xèo xèo dậy mùi thơm,\nRau vừng kim chi cuốn chẳng nhờn!',
-    tip: '🧥 Bỏ áo khoác vào túi chống ám mùi trước khi gắp miếng thịt đầu tiên.',
-  },
-  {
-    id: 'food-lau-nam-hai-san',
-    code: 'QUẺ ĂN #16 • HOÀNG KIM ĐẠI TIỆC',
-    budgets: ['high'],
-    companies: ['group'],
-    title: '🦀 Lẩu Hải Sản Tôm Càng – Bào Ngư – Bò Mỹ Hai Ngăn Thượng Hạng',
-    priceNote: '💸 260k – 420k / người',
-    vibeNote: '👑 Nồi lẩu hai ngăn hoành tráng, quầy sốt tự pha 20 món',
-    roast: 'Đã đi đông lại còn chịu chi 200 cành trở lên thì đừng có keo kiệt! Vào thẳng quán lẩu hai ngăn thượng hạng, pha bát sốt mè đậu phộng thần thánh rồi nhúng ngập tôm thịt cho Dobby!',
-    poem: 'Nửa cay tê lưỡi nửa ngọt thanh,\nCả hội no căng bụng tốt lành.',
-    tip: '🍨 Nhớ chừa 10% dung lượng dạ dày cho quầy kem tráng miệng miễn phí cuối bữa.',
-  },
+  ...FOOD_ORACLES_LOW,
+  ...FOOD_ORACLES_MID,
+  ...FOOD_ORACLES_HIGH,
 ];
 
 export const PLACE_ORACLES = [
-  // === LOW BUDGET (<60k) ===
-  {
-    id: 'place-cong-vien-ho-hoang-hon',
-    code: 'QUẺ ĐI #01 • GIÓ MÁT KHÔNG TỐN PHÍ',
-    budgets: ['low'],
-    companies: ['solo', 'couple'],
-    title: '🌇 Dạo Bờ Hồ / Công Viên Bờ Sông Ngắm Hoàng Hôn + Nước Mía Tắc',
-    priceNote: '💸 15k – 35k',
-    vibeNote: '🍃 Gió lồng lộng thổi bay não bộ quá tải sau giờ làm',
-    roast: 'Ví mỏng dính mà ở lì trong phòng trọ nhìn trần nhà là trầm cảm đấy! Xỏ giày ra bờ sông hứng gió trời miễn phí, cầm ly nước mía 15 cành ngắm mặt trời lặn cũng đủ chill như phim điện ảnh!',
-    poem: 'Gió sông lồng lộng chẳng thu tiền,\nNgắm ánh chiều buông rũ muộn phiền.',
-    tip: '🎧 Đeo tai nghe bật playlist lo-fi hoặc nhạc phim Ghibli là tăng 200% độ thơ.',
-  },
-  {
-    id: 'place-nha-sach-thu-vien',
-    code: 'QUẺ ĐI #02 • TỊNH TÂM LẠNH MÁT',
-    budgets: ['low'],
-    companies: ['solo', 'couple'],
-    title: '📚 Đường Sách / Nhà Sách Cũ Thơm Mùi Giấy & Điều Hoà Mát Rượi',
-    priceNote: '💸 0đ – 55k (nếu rinh 1 cuốn sách cũ)',
-    vibeNote: '📖 Không gian tĩnh lặng, hương giấy cũ chữa lành tâm trí',
-    roast: 'Muốn hưởng máy lạnh chùa mà vẫn mang tiếng tri thức thanh cao? Đường sách và tiệm sách cũ đang vẫy gọi bồ kìa! Đứng lật vài trang tản văn biết đâu ngộ ra chân lý thoát ế!',
-    poem: 'Hương giấy thơm trầm giữa phố đông,\nĐọc dăm trang sách nhẹ cõi lòng.',
-    tip: '📵 Chuyển điện thoại sang im lặng để khỏi phá vỡ bầu không khí thiền định của tiệm.',
-  },
-  {
-    id: 'place-tra-chanh-ghe-nhua',
-    code: 'QUẺ ĐI #03 • ĐÀI PHÁT THANH VỈA HÈ',
-    budgets: ['low'],
-    companies: ['couple', 'group'],
-    title: '🍋 Trà Chanh Giã Tay & Hướng Dương Ghế Nhựa Ngắm Phố Đêm',
-    priceNote: '💸 25k – 45k / người',
-    vibeNote: '🌻 Cắn hướng dương rôm rốp, bình phẩm nhân tình thế thái',
-    roast: 'Cả đám túi rỗng tuếch nhưng mồm vẫn ngứa ngáy muốn tụ tập? Trà chanh vỉa hè + đĩa hướng dương 15k là thánh địa tối thượng để bóc phốt cuộc đời mà ví không rỉ một giọt máu!',
-    poem: 'Hướng dương tách vỏ rộn tiếng cười,\nBa chục một ly sướng cả người!',
-    tip: '🥤 Gọi ít đường thôi kẻo tiền tiết kiệm hôm nay mai lại nộp cho phòng khám răng.',
-  },
-  {
-    id: 'place-bao-tang-trien-lam-free',
-    code: 'QUẺ ĐI #04 • NGHỆ THUẬT MỎNG VÍ',
-    budgets: ['low'],
-    companies: ['solo', 'couple', 'group'],
-    title: '🏛️ Bảo Tàng Mỹ Thuật / Phòng Tranh Triển Lãm Vé Hạt Dẻ',
-    priceNote: '💸 0đ – 40k / vé',
-    vibeNote: '🖼️ Hành lang cổ điển nắng xiên, góc nào giơ máy lên cũng nghệ',
-    roast: 'Ít tiền mà vẫn muốn có bộ ảnh sang xịn như dân nghệ sĩ? Đi bảo tàng ngay cho Dobby! Vừa mát mẻ yên tĩnh, vừa đứng trầm ngâm trước bức tranh trừu tượng dù trong đầu đang nghĩ tối ăn mì gói vị gì.',
-    poem: 'Khung cửa vàng ươm nắng chiếu nghiêng,\nDạo xem tranh vẽ quên ưu phiền.',
-    tip: '👗 Mặc tông trắng, be hoặc đen tối giản là nổi bần bật giữa hành lang cổ.',
-  },
-
-  // === MID BUDGET (60k–180k) ===
-  {
-    id: 'place-cafe-rooftop-acoustic',
-    code: 'QUẺ ĐI #05 • TẦNG CAO GIÓ LỘNG',
-    budgets: ['mid'],
-    companies: ['solo', 'couple', 'group'],
-    title: '🌃 Cà Phê Rooftop Ngắm Đèn Phố Lung Linh Lúc Chạng Vạng',
-    priceNote: '💸 65k – 120k / ly nước',
-    vibeNote: '✨ Nhìn dòng xe kẹt cứng từ tầng thượng trong lòng hả hê',
-    roast: 'Thay vì chôn chân giữa ngã tư hít khói xe, leo thẳng lên quán Rooftop gọi ly trà trái cây mát lạnh nhìn thiên hạ chen chúc dưới kia đi! Cảm giác thượng đẳng giá 85 cành quá hời!',
-    poem: 'Tầng cao gió mát ngắm đèn hoa,\nKẹt xe dưới phố mặc người ta!',
-    tip: '🕔 Lên quán tầm 17h15 để bắt trọn khoảnh khắc bầu trời chuyển tím hồng đẹp nhất.',
-  },
-  {
-    id: 'place-rap-phim-suat-toi',
-    code: 'QUẺ ĐI #06 • BÓNG TỐI TRỐN ĐỜI',
-    budgets: ['mid'],
-    companies: ['solo', 'couple', 'group'],
-    title: '🍿 Rạp Chiếu Phim Ghế Êm + Bắp Phô Mai Caramel Thơm Nức',
-    priceNote: '💸 95k – 175k / người',
-    vibeNote: '🎬 Tắt điện thoại 2 tiếng, chìm hẳn vào thế giới khác',
-    roast: 'Não bồ hôm nay không tải thêm nổi chuyện đời thực nữa đâu! Mua ngay vé xem phim kèm hộp bắp trộn 2 vị: đi một mình thì bao trọn sự tự do, đi hai người thì khỏi lo bí chuyện để nói!',
-    poem: 'Đèn tắt màn lên quên tháng ngày,\nBắp thơm giòn rụm tỉnh cơn say.',
-    tip: '🎟️ Chọn ghế hàng G hoặc H chính giữa rạp để không bị mỏi cổ.',
-  },
-  {
-    id: 'place-boardgame-bida-group',
-    code: 'QUẺ ĐI #07 • SÁT PHẠT TÌNH BẠN',
-    budgets: ['mid'],
-    companies: ['group'],
-    title: '🎲 Quán Boardgame / CLB Bida Máy Lạnh Giao Hữu Cực Căng',
-    priceNote: '💸 70k – 150k / người',
-    vibeNote: '🎱 Thử thách độ bền tình bạn qua từng ván bài & đường cơ',
-    roast: 'Hội nhóm gặp nhau mà mỗi đứa cắm mặt vào một cái điện thoại thì ở nhà cho khoẻ! Kéo nhau ra quán Boardgame hoặc làm vài cơ Bida xem đứa nào là kẻ phản bội thực thụ trong nhóm!',
-    poem: 'Một ván Ma Sói lộ chân tình,\nCười vang sảng khoái hết bực mình!',
-    tip: '🤝 Giao ước trước: đứa thua trả chầu trà đá tăng hai, cấm giận dỗi unfriend.',
-  },
-  {
-    id: 'place-workshop-gom-nen',
-    code: 'QUẺ ĐI #08 • KHÉO TAY HAY PHÁ',
-    budgets: ['mid'],
-    companies: ['solo', 'couple'],
-    title: '🕯️ Góc Cà Phê Tô Tượng / Làm Nến Thơm Thủ Công Chill Nhạc Nhẹ',
-    priceNote: '💸 85k – 175k / người',
-    vibeNote: '🎨 Chăm chú pha màu, mang thành phẩm độc bản về bàn làm việc',
-    roast: 'Tay chân bồn chồn không yên thì đi tô tượng hoặc đổ sáp nến thơm ngay! Dù tác phẩm của bồ trông giống quái vật đầm lầy hơn mẫu gốc thì quá trình ngồi tỉ mẩn cũng cực kỳ xả stress.',
-    poem: 'Cọ nhỏ pha màu quên thời gian,\nTâm hồn thư thái bớt hoang mang.',
-    tip: '🕯️ Chọn mùi gỗ tuyết tùng hoặc cam bergamot dễ chịu, đừng pha 5 mùi lại thành dầu gió.',
-  },
-  {
-    id: 'place-cafe-meo-sach-solo',
-    code: 'QUẺ ĐI #09 • HOÀNG THƯỢNG ĐỘ TRÌ',
-    budgets: ['mid'],
-    companies: ['solo'],
-    title: '🐾 Cà Phê Mèo Lười / Hidden Cafe Hẻm Nhỏ Nhạc Jazz Trầm',
-    priceNote: '💸 65k – 110k',
-    vibeNote: '🐈 Nằm dài đọc sách hoặc vuốt bụng mèo béo quên sầu',
-    roast: 'Con người làm bồ mệt mỏi thì đi tìm loài bốn chân chảnh choẹ mà chữa lành! Vào quán cà phê hẻm yên tĩnh, gọi ly bạc xỉu rồi ngồi ngắm đám mèo béo ngủ khò cũng thấy đời đáng yêu trở lại.',
-    poem: 'Hẻm nhỏ rêu phong tiếng nhạc êm,\nVuốt mèo một chút ấm cả đêm.',
-    tip: '🧶 Mang quần tối màu nếu không muốn đem cả bộ lông mèo về làm kỷ niệm.',
-  },
-
-  // === HIGH BUDGET (200k+) ===
-  {
-    id: 'place-goi-dau-duong-sinh-spa',
-    code: 'QUẺ ĐI #10 • ĐẠI TU CỘT SỐNG',
-    budgets: ['high'],
-    companies: ['solo', 'couple'],
-    title: '💆‍♀️ Spa Gội Đầu Dưỡng Sinh Thảo Dược & Massage Cổ Vai Gáy 75 Phút',
-    priceNote: '💸 220k – 420k / người',
-    vibeNote: '🌿 Tinh dầu sả chanh ấm áp, bấm huyệt tới đâu ngủ gục tới đó',
-    roast: 'Cái vai cứng đơ như tượng đá trong đền của Dobby rồi kìa! Có tiền trong ví thì đừng mua linh tinh nữa — đi nằm gội đầu dưỡng sinh bấm huyệt cổ vai gáy ngay trước khi cột sống viết đơn xin nghỉ việc!',
-    poem: 'Thảo dược thơm nồng ấm đỉnh đầu,\nVai êm cổ nhẹ sạch cơn đau!',
-    tip: '😴 Dặn kỹ thuật viên lực vừa phải và cứ việc ngủ thẳng một giấc không cần ngại.',
-  },
-  {
-    id: 'place-hidden-cocktail-jazz-bar',
-    code: 'QUẺ ĐI #11 • MẬT THẤT ĐÊM KHUYA',
-    budgets: ['high'],
-    companies: ['solo', 'couple'],
-    title: '🍸 Speakeasy Hidden Cocktail Bar Nhạc Jazz Live Cuối Hẻm Bí Mật',
-    priceNote: '💸 240k – 450k / người',
-    vibeNote: '🎷 Đẩy cánh cửa gỗ bí ẩn, nhâm nhi ly cocktail pha riêng theo tâm trạng',
-    roast: 'Đêm nay thần thái bồ hợp với ánh đèn hổ phách mờ ảo và tiếng kèn Saxophone trầm khàn đấy! Ngồi quầy bar kể mood cho Bartender pha riêng một ly chua thanh khói nhẹ — sang và ngầu miễn bàn!',
-    poem: 'Cửa gỗ mở ra cõi mộng mơ,\nMột ly khói mỏng đẹp như thơ.',
-    tip: '🚕 Đã nhấp đồ có cồn thì lượt về đặt xe công nghệ 100%, Giáo Chủ nghiêm cấm tự cầm lái!',
-  },
-  {
-    id: 'place-karaoke-bowling-arcade',
-    code: 'QUẺ ĐI #12 • HÉT VANG XẢ NGHIỆP',
-    budgets: ['high'],
-    companies: ['group'],
-    title: '🎤 Phòng Karaoke Box Xịn / Khu Bowling & Arcade Game Đấu Giải',
-    priceNote: '💸 210k – 380k / người',
-    vibeNote: '🎳 Ném đổ dàn ky Bowling rồi gào khản cổ những bản hit thanh xuân',
-    roast: 'Đi nguyên hội đông mà ngồi im thít là phí tiền! Kéo thẳng vào sân Bowling phân thắng bại xong chốt hạ phòng Karaoke âm thanh vòm hét bay mọi cục tức tích tụ từ đầu tháng tới giờ!',
-    poem: 'Ném đổ hàng ky tiếng vỗ giòn,\nHát vang một khúc trẻ tâm hồn!',
-    tip: '🫖 Gọi sẵn bình trà mật ong ấm trong phòng hát để sáng mai còn giữ lại giọng người.',
-  },
-  {
-    id: 'place-glamping-sup-ven-do',
-    code: 'QUẺ ĐI #13 • ĐÀO TẨU KHỎI PHỐ',
-    budgets: ['high'],
-    companies: ['couple', 'group'],
-    title: '⛺ Khu Glamping Ven Sông / Chèo SUP Ngắm Nắng & Trà Chiều Ngoài Trời',
-    priceNote: '💸 250k – 480k / người',
-    vibeNote: '🌲 Rời bê tông cốt thép, hít căng lồng ngực mùi cỏ cây sông nước',
-    roast: 'Ngân sách rủng rỉnh lại có đồng bọn đi cùng thì trốn khỏi trung tâm ồn ào vài tiếng ngay! Ra khu cắm trại ven sông ngồi ghế bố uống trà chiều, ngắm mặt nước lấp lánh là sạc đầy 100% pin tâm hồn!',
-    poem: 'Rời phố xô bồ đón gió mây,\nBên sông lều trắng nắng đong đầy.',
-    tip: '🧴 Nhớ bôi kem chống nắng hoặc xịt chống muỗi nếu ngồi tới chập tối.',
-  },
+  ...PLACE_ORACLES_LOW,
+  ...PLACE_ORACLES_MID,
+  ...PLACE_ORACLES_HIGH,
 ];
 
-export function pickOracleItem(mode, budget, company, excludeId = null) {
-  const pool = mode === 'place' ? PLACE_ORACLES : FOOD_ORACLES;
+// In-memory fallback history when sessionStorage is unavailable (e.g. Node serverless runtime)
+const memoryHistoryByBucket = new Map();
+const STORAGE_KEY = 'dobby_oracle_seen_v2';
+
+function loadBucketHistory(bucketKey) {
+  if (typeof window !== 'undefined' && window.sessionStorage) {
+    try {
+      const raw = window.sessionStorage.getItem(STORAGE_KEY);
+      const parsed = raw ? JSON.parse(raw) : {};
+      return Array.isArray(parsed[bucketKey]) ? parsed[bucketKey] : [];
+    } catch {
+      // fall through to memory map
+    }
+  }
+  return memoryHistoryByBucket.get(bucketKey) || [];
+}
+
+function saveBucketHistory(bucketKey, seenIds) {
+  memoryHistoryByBucket.set(bucketKey, seenIds);
+  if (typeof window !== 'undefined' && window.sessionStorage) {
+    try {
+      const raw = window.sessionStorage.getItem(STORAGE_KEY);
+      const parsed = raw ? JSON.parse(raw) : {};
+      parsed[bucketKey] = seenIds;
+      window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+    } catch {
+      // ignore quota / private mode errors
+    }
+  }
+}
+
+/**
+ * Pick an oracle item matching (mode, budget, company) with deck-style non-repeating cycle:
+ * - Excludes any explicit `excludeIdOrIds` (string or string[]) AND previously drawn items in the
+ *   current `(mode, budget, company)` bucket until every matching fortune has been shown once.
+ * - When the full matching deck has been exhausted, resets the cycle while still excluding the
+ *   most recently drawn item so back-to-back draws never repeat.
+ */
+export function pickOracleItem(mode, budget, company, excludeIdOrIds = null, options = {}) {
+  const normalizedMode = mode === 'place' ? 'place' : 'food';
+  const pool = normalizedMode === 'place' ? PLACE_ORACLES : FOOD_ORACLES;
+
   let matches = pool.filter(
     (item) => item.budgets.includes(budget) && item.companies.includes(company),
   );
@@ -389,8 +84,42 @@ export function pickOracleItem(mode, budget, company, excludeId = null) {
   if (matches.length === 0) {
     matches = pool;
   }
-  const filtered = matches.length > 1 && excludeId
-    ? matches.filter((item) => item.id !== excludeId)
-    : matches;
-  return filtered[Math.floor(Math.random() * filtered.length)];
+
+  const explicitExcludes = new Set();
+  if (Array.isArray(excludeIdOrIds)) {
+    for (const id of excludeIdOrIds) {
+      if (id) explicitExcludes.add(String(id));
+    }
+  } else if (excludeIdOrIds) {
+    explicitExcludes.add(String(excludeIdOrIds));
+  }
+
+  const bucketKey = `${options.scopeKey ? `${options.scopeKey}:` : ''}${normalizedMode}:${budget}:${company}`;
+  const seenHistory = options.disableAutoHistory ? [] : loadBucketHistory(bucketKey);
+  const lastSeenId =
+    seenHistory.length > 0
+      ? seenHistory[seenHistory.length - 1]
+      : Array.from(explicitExcludes).pop() || null;
+
+  const combinedExcludes = new Set([...seenHistory, ...explicitExcludes]);
+  let candidates = matches.filter((item) => !combinedExcludes.has(item.id));
+
+  let nextHistory = [...seenHistory];
+  if (candidates.length === 0) {
+    // Deck exhausted -> reshuffle full bucket, still avoiding immediate repeat of the last item
+    candidates =
+      matches.length > 1 && lastSeenId
+        ? matches.filter((item) => item.id !== lastSeenId)
+        : matches;
+    nextHistory = [];
+  }
+
+  const picked = candidates[Math.floor(Math.random() * candidates.length)];
+
+  if (!options.disableAutoHistory && picked) {
+    nextHistory.push(picked.id);
+    saveBucketHistory(bucketKey, nextHistory);
+  }
+
+  return picked;
 }

@@ -58,7 +58,7 @@ export async function downloadOracleCardPng({ mode, item, portraitDataUrl, playe
   ctx.fill();
   ctx.fillStyle = '#065F46';
   ctx.font = '800 21px "Be Vietnam Pro", system-ui, sans-serif';
-  ctx.fillText(`${item.priceNote}  •  ${item.vibeNote}`, W / 2, curY + 36);
+  ctx.fillText(`${item.priceNote}  •  ${item.vibeNote}`, W / 2, curY + 36, W - 220);
 
   // Dobby Dark Roast Box
   curY += 84;

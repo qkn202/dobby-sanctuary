@@ -1,5 +1,10 @@
 import './style.css';
-import { NICKNAMES, WIZARD_PALETTES, BOW_BLESSINGS, randomItem } from './data/nicknames.js';
+import {
+  WIZARD_PALETTES,
+  BOW_BLESSINGS,
+  randomItem,
+  generateRandomNickname,
+} from './data/nicknames.js';
 import { pickOracleItem } from './data/fortunes.js';
 import { MOKTAK_CHANTS } from './data/moktakChants.js';
 import { generateTuViChart } from './utils/tuviEngine.js';
@@ -8,6 +13,32 @@ import { RoomClient } from './utils/roomClient.js';
 import { downloadOracleCardPng } from './utils/shareCardCanvas.js';
 import { initModernOverlays, closeTopLayer } from './utils/overlays.js';
 import { DobbySanctuaryWorld } from './world3d/DobbySanctuaryWorld.js';
+
+function createInitialRandomProfile() {
+  let prevNick = null;
+  try {
+    localStorage.removeItem('dobby_nick');
+    prevNick = sessionStorage.getItem('dobby_last_nick');
+  } catch {
+    // ignore storage restrictions
+  }
+  const initialName = generateRandomNickname([prevNick]);
+  try {
+    sessionStorage.setItem('dobby_last_nick', initialName);
+  } catch {
+    // ignore storage restrictions
+  }
+  return {
+    name: initialName,
+    palette: randomItem(WIZARD_PALETTES),
+  };
+}
+
+const initialProfile = createInitialRandomProfile();
+const selfNickLabel = document.getElementById('self-nick-label');
+if (selfNickLabel) {
+  selfNickLabel.textContent = initialProfile.name;
+}
 
 await initModernOverlays();
 
@@ -23,15 +54,11 @@ const state = {
   isShakingOracle: false,
   shakeCaptionTimer: null,
   shakeRevealTimer: null,
-  playerProfile: {
-    name: NICKNAMES.includes(localStorage.getItem('dobby_nick')) ? localStorage.getItem('dobby_nick') : NICKNAMES[0],
-    palette: WIZARD_PALETTES[0],
-  },
+  playerProfile: initialProfile,
 };
 
 // DOM Elements
 const meritNumEl = document.getElementById('merit-num');
-const selfNickLabel = document.getElementById('self-nick-label');
 const onlineStatusEl = document.getElementById('online-status');
 const breezeToastEl = document.getElementById('breeze-toast');
 
@@ -138,6 +165,18 @@ const roomClient = new RoomClient({
     if (Array.isArray(msg.peers)) {
       msg.peers.forEach((p) => world.crowd?.upsertRemotePeer(p));
       world.crowd?.ensureUniqueSelfSeat();
+      const takenPeerNames = new Set(msg.peers.map((p) => p?.name).filter(Boolean));
+      if (takenPeerNames.has(state.playerProfile.name)) {
+        const uniqueName = generateRandomNickname([...takenPeerNames, state.playerProfile.name]);
+        state.playerProfile = { ...state.playerProfile, name: uniqueName };
+        selfNickLabel.textContent = uniqueName;
+        world.crowd?.setSelfProfile(uniqueName, state.playerProfile.palette);
+        try {
+          sessionStorage.setItem('dobby_last_nick', uniqueName);
+        } catch {
+          // ignore storage restrictions
+        }
+      }
     }
     updateOnlineCount();
     const selfState = world.crowd?.serializeSelf();
@@ -227,8 +266,11 @@ function restartAnimClass(el, className) {
 
 function strikeMoktak({ ensurePanelOpen = false } = {}) {
   setActiveDock('btn-moktak');
-  if (ensurePanelOpen && !moktakPopover.matches(':popover-open, .\\:popover-open')) {
-    moktakPopover.showPopover?.();
+  if (ensurePanelOpen && !moktakPopover.open) {
+    if (fortuneMenuPopover.matches(':popover-open, .\\:popover-open')) {
+      fortuneMenuPopover.hidePopover?.();
+    }
+    moktakPopover.showModal();
   }
 
   state.moktakCount = (state.moktakCount % 108) + 1;
@@ -533,8 +575,11 @@ document.getElementById('btn-moktak').addEventListener('click', () => {
 });
 
 document.getElementById('moktak-close-btn').addEventListener('click', () => {
-  stopAutoMoktak();
   closeTopLayer(moktakPopover);
+});
+
+moktakPopover.addEventListener('close', () => {
+  stopAutoMoktak();
   setActiveDock('btn-sit');
 });
 
@@ -572,11 +617,18 @@ for (const closeBtn of document.querySelectorAll('[data-close-dialog]')) {
 }
 
 document.getElementById('btn-reroll-nick').addEventListener('click', () => {
-  const candidates = NICKNAMES.filter((n) => n !== state.playerProfile.name);
-  const nextName = randomItem(candidates);
-  const nextPal = randomItem(WIZARD_PALETTES);
+  const activeActorNames = world.crowd
+    ? Array.from(world.crowd.actors.values()).map((a) => a.name)
+    : [state.playerProfile.name];
+  const nextName = generateRandomNickname([state.playerProfile.name, ...activeActorNames]);
+  const otherPalettes = WIZARD_PALETTES.filter((p) => p !== state.playerProfile.palette);
+  const nextPal = randomItem(otherPalettes.length > 0 ? otherPalettes : WIZARD_PALETTES);
   state.playerProfile = { name: nextName, palette: nextPal };
-  localStorage.setItem('dobby_nick', nextName);
+  try {
+    sessionStorage.setItem('dobby_last_nick', nextName);
+  } catch {
+    // ignore storage restrictions
+  }
   selfNickLabel.textContent = nextName;
   world.crowd?.setSelfProfile(nextName, nextPal);
   const selfState = world.crowd?.serializeSelf();

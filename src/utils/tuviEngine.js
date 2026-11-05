@@ -1,6 +1,9 @@
-// 100% Client-Side Vietnamese 12-Palace Tử Vi Engine + Dark-Humorous Dobby Daily Commentary
+// 100% Client-Side Vietnamese 12-Palace Tử Vi Engine + Sassy Dark-Humorous Dobby Daily Commentary
 // Uses Temporal.PlainDate for location-agnostic calendar values and Intl.DateTimeFormat('en-u-ca-chinese')
 // solely for Chinese/Vietnamese lunisolar month/day/year mapping.
+
+import { TUVI_LOVE_DAILY_100, TUVI_MONEY_DAILY_100 } from '../data/tuviLoveAndMoney100.js';
+import { TUVI_DECREES_100 } from '../data/tuviDecrees100.js';
 
 export const THIEN_CAN = ['Giáp', 'Ất', 'Bính', 'Đinh', 'Mậu', 'Kỷ', 'Canh', 'Tân', 'Nhâm', 'Quý'];
 export const DIA_CHI = ['Tý', 'Sửu', 'Dần', 'Mão', 'Thìn', 'Tỵ', 'Ngọ', 'Mùi', 'Thân', 'Dậu', 'Tuất', 'Hợi'];
@@ -353,14 +356,17 @@ export function generateTuViChart({ dobPlainDate, gender = 'nam', birthHourIdx =
   const taiBachPalace = palacesByBranch.find((p) => p.palaceName === 'TÀI BẠCH');
   const menhPalace = palacesByBranch[menhIdx];
 
-  // Daily deterministic seed combining user's DOB + gender + today's Gregorian date
+  // Daily deterministic seed combining full DOB + palace anchors + gender + today's Gregorian date
   const daySeed =
-    todayPlainDate.year * 372 +
+    todayPlainDate.year * 373 +
     todayPlainDate.month * 31 +
     todayPlainDate.day * 17 +
+    (dobPlainDate.year % 100) * 29 +
     dobPlainDate.day * 13 +
     dobPlainDate.month * 7 +
-    (gender === 'nam' ? 3 : 9);
+    menhIdx * 19 +
+    resolvedHourIdx * 5 +
+    (gender === 'nam' ? 3 : 11);
 
   const commentary = buildDarkDobbyDailyRoast({
     phuThePalace,
@@ -395,14 +401,39 @@ export function generateTuViChart({ dobPlainDate, gender = 'nam', birthHourIdx =
   };
 }
 
+const tuviSeenMemory = {
+  love: new Set(),
+  money: new Set(),
+  decree: new Set(),
+  lastIdx: { love: -1, money: -1, decree: -1 },
+};
+
+function pickUnseenFromPool(pool, preferredStartIdx, category) {
+  const len = pool.length;
+  const seen = tuviSeenMemory[category];
+  if (seen.size >= len) {
+    seen.clear();
+  }
+  const start = ((preferredStartIdx % len) + len) % len;
+  // Coprime stride 37 (gcd(37, 100) === 1) traverses all 100 items pseudo-randomly without collision
+  for (let step = 0; step < len; step += 1) {
+    const candidateIdx = (start + step * 37) % len;
+    if (!seen.has(candidateIdx) && (len === 1 || candidateIdx !== tuviSeenMemory.lastIdx[category])) {
+      seen.add(candidateIdx);
+      tuviSeenMemory.lastIdx[category] = candidateIdx;
+      return pool[candidateIdx];
+    }
+  }
+  const fallbackIdx = (tuviSeenMemory.lastIdx[category] + 1) % len;
+  seen.add(fallbackIdx);
+  tuviSeenMemory.lastIdx[category] = fallbackIdx;
+  return pool[fallbackIdx];
+}
+
 function buildDarkDobbyDailyRoast({
   phuThePalace,
   taiBachPalace,
-  menhPalace,
-  banMenh,
-  gender,
   daySeed,
-  todayPlainDate,
 }) {
   const loveMain = phuThePalace.mainStars.length > 0
     ? phuThePalace.mainStars.join(' • ')
@@ -414,52 +445,72 @@ function buildDarkDobbyDailyRoast({
     : 'Vô Chính Diệu';
   const moneyAux = taiBachPalace.auxStars;
 
-  // --- LOVE ROASTS (Personalized by DOB stars + Daily Transit) ---
-  let loveIntro = '';
+  // --- LOVE ROASTS (Personalized by DOB stars + 100 Sassy Daily Readings) ---
+  let loveIntroPool = [];
   if (phuThePalace.mainStars.some((s) => ['Thất Sát', 'Phá Quân', 'Liêm Trinh'].includes(s))) {
-    loveIntro = 'Gu tình cảm của bồ đúng hệ thích cảm giác mạnh — người hiền lành tử tế thì chê nhạt, cứ thấy cờ đỏ phấp phới lại tưởng cờ hội làng!';
+    loveIntroPool = [
+      `Cung Phu Thê đóng ${loveMain}: gu tình cảm đúng hệ thích đâm đầu vô bụi rậm — người hiền lành tử tế thì ngáp ngắn ngáp dài chê nhạt, thấy cờ đỏ phấp phới lại lao vô như thiêu thân!`,
+      `Sao ${loveMain} chiếu đường tình: lúc mới thích thì cháy như rơm khô gặp lửa, hễ người ta lệch sóng nửa nhịp là bật chế độ tiễn vong lạnh ngắt không thèm nghe trình bày!`,
+      `Mang vía ${loveMain} cung tình duyên: ngoài mặt vểnh cằm tỏ vẻ bất cần thiên hạ, bên trong lại sĩ diện ngút trời — ai lươn lẹo một lần là bồ ghim tới bảy kiếp sau!`,
+    ];
   } else if (phuThePalace.mainStars.some((s) => ['Tham Lang', 'Thái Âm', 'Thiên Đồng'].includes(s)) || loveAux.includes('Đào Hoa') || loveAux.includes('Hồng Loan')) {
-    loveIntro = 'Duyên lướt qua đời thì lắm nhưng toàn duyên xem chùa story chứ chưa ai chịu chốt sổ đỏ tim bồ!';
+    loveIntroPool = [
+      `Cung Phu Thê hội ${loveMain}: duyên lướt qua đời đông như trẩy hội nhưng toàn duyên xem chùa story thả tim dạo chứ chưa ma nào đủ bản lĩnh chốt sổ đỏ tim bồ!`,
+      `Vía đào hoa từ ${loveMain}: ra đường dễ làm con nhà người ta tương tư vô cớ, ngặt nỗi người bồ nhắm tới thì cứ lửng lơ còn người bồ trốn thì bám dai như đỉa!`,
+      `Tình duyên mang sắc ${loveMain}: đầu óc mộng mơ bay bổng trên mây, người ta mới nhớ giùm ly trà sữa ít đá đã cảm động suýt trao cả cuộc đời!`,
+    ];
   } else if (phuThePalace.mainStars.some((s) => ['Tử Vi', 'Thiên Phủ', 'Vũ Khúc', 'Thiên Lương'].includes(s)) || loveAux.includes('Cô Thần') || loveAux.includes('Quả Tú')) {
-    loveIntro = 'Mồm thì than sao mãi cô đơn mà cái nết kén cá chọn canh còn gắt hơn HR lọc CV tập đoàn đa quốc gia!';
+    loveIntroPool = [
+      `Cung tình cảm toạ ${loveMain}: mở miệng ra là than ế mốc meo mà cái nết kén cá chọn canh gắt hơn giám khảo chấm thi hoa hậu hoàn vũ!`,
+      `Sao ${loveMain} giữ cửa trái tim: thà độc thân kiêu kỳ ngồi đếm tiền lẻ còn hơn yêu bừa cho có tụ — tiêu chuẩn ngầm cao chót vót ai trèo tới đã hụt hơi!`,
+      `Đường duyên nợ đóng ${loveMain}: mặt mũi lúc nào cũng nghiêm như sếp tổng đi thanh tra, không hạ bớt hàng rào phòng vệ xuống thì ông Tơ cũng bó tay chịu trói!`,
+    ];
   } else if (phuThePalace.mainStars.some((s) => ['Cự Môn', 'Thái Dương', 'Thiên Cơ'].includes(s))) {
-    loveIntro = 'Yêu đương bằng cái đầu phân tích quá đà, người ta nhắn thiếu dấu chấm cảm thôi cũng tự biên tự diễn nguyên bộ phim tâm lý hình sự!';
+    loveIntroPool = [
+      `Cung Phu Thê ứng ${loveMain}: yêu đương mà não chạy phân tích như thám tử điều tra trọng án, người ta nhắn thiếu dấu chấm than cũng suy diễn ra mười tập ngoại truyện!`,
+      `Tinh diệu ${loveMain} chiếu duyên: chúa tể khẩu xà tâm phật — trong bụng lo cho người ta sốt vó mà mở mồm ra toàn câu xéo xắt bén đứt tay!`,
+      `Bản tính tình cảm hệ ${loveMain}: dị ứng nặng với mấy câu thả thính văn mẫu rẻ tiền, ai nói chuyện nhạt nhẽo thiếu muối quá ba câu là bồ ngáp thẳng mặt!`,
+    ];
   } else {
-    loveIntro = 'Tình duyên dạo này như sóng Wi-Fi tầng hầm — lúc tưởng căng đét 4 vạch, quay lưng một cái là mất kết nối không lý do!';
+    loveIntroPool = [
+      `Cung Phu Thê (${loveMain}): đường tình dạo này chập chờn y hệt sóng Wi-Fi tầng hầm — lúc tưởng căng đét bốn vạch, vừa quay lưng đã mất tín hiệu!`,
+      `Đường tình ứng thế ${loveMain}: lúc sục sạo tìm kiếm thì chẳng thấy bóng ma nào, lúc đầu bù tóc rối không phòng bị lại đụng ngay duyên lạ!`,
+      `Khí sắc tình cảm (${loveMain}): mấy mối hào nhoáng phông bạt chẳng giữ chân bồ nổi ba bữa, chỉ hợp người lầm lì thực tế nói ít làm nhiều thôi!`,
+    ];
   }
+  const loveIntro = loveIntroPool[(daySeed + tuviSeenMemory.love.size) % loveIntroPool.length];
+  const loveDaily = pickUnseenFromPool(TUVI_LOVE_DAILY_100, daySeed, 'love');
 
-  const loveDailyPool = [
-    `Hôm nay (${todayPlainDate.day}/${todayPlainDate.month}), tuyệt đối cất cái tay định nhắn tin hỏi thăm mập mờ cũ lúc quá 22h đêm đi — người ta seen không rep lại đổ thừa tại sao thuỷ nghịch hành!`,
-    'Trong ngày hôm nay, ai khen bồ một câu thì tin nửa câu thôi, còn có đôi có cặp rồi thì bớt hỏi “anh/em thấy nay có gì khác không” kẻo tự rước chiến tranh lạnh vào người!',
-    `Vía tình cảm hôm nay của mệnh ${banMenh.name}: đứng yên thì quyến rũ bí ẩn, cứ mở miệng hờn mát bóng gió là tụt sạch 80 điểm thần thái ngay lập tức!`,
-    `Cảnh báo từ Dobby hôm nay: đừng nhầm tín hiệu “lịch sự xã giao” thành “người ta đổ đứ đừ mình rồi” — tỉnh lại đi phù thuỷ ${gender === 'nam' ? 'đẹp trai hay ảo tưởng' : 'xinh đẹp hay suy diễn'}!`,
-  ];
-
-  // --- FINANCE ROASTS (Personalized by DOB stars + Daily Transit) ---
-  let moneyIntro = '';
+  // --- FINANCE ROASTS (Personalized by DOB stars + 100 Sassy Daily Readings) ---
+  let moneyIntroPool = [];
   if (taiBachPalace.mainStars.some((s) => ['Vũ Khúc', 'Thiên Phủ', 'Thái Âm'].includes(s)) || moneyAux.includes('Lộc Tồn') || moneyAux.includes('Hoá Lộc')) {
-    moneyIntro = 'Số không bao giờ đứt bữa, có năng lực hút tiền nhưng hễ thấy chữ “freeship” hay “sale chớp nhoáng” là não tài chính tự động ngắt cầu dao!';
+    moneyIntroPool = [
+      `Cung Tài Bạch toạ ${moneyMain}: số có lộc giữ mình không bao giờ đứt bữa, khổ nỗi hễ mắt liếc thấy chữ “giảm sốc nửa đêm” là não tài chính tự động sập nguồn!`,
+      `Sao tài lộc ${moneyMain} chiếu ví: ngoài mặt chúa hay than nghèo kể khổ phòng thân, chứ thực chất luôn giấu quỹ đen ngầm kỹ hơn mèo giấu cứt!`,
+      `Vía tiền bạc từ ${moneyMain}: tay làm ra tiền nhạy bén có hạng, chỉ cần dẹp tật rinh đồ giảm giá về nhét chật tủ nguyên mác là giàu sụ từ lâu rồi!`,
+    ];
   } else if (taiBachPalace.mainStars.some((s) => ['Phá Quân', 'Thất Sát', 'Tham Lang'].includes(s)) || moneyAux.includes('Địa Không') || moneyAux.includes('Địa Kiếp')) {
-    moneyIntro = 'Kiếm tiền bằng mồ hôi sôi nước mắt nhưng tiêu tiền với phong thái thiếu gia dầu mỏ — ví chưa kịp ấm chỗ đã bay vèo vì ba cái kèo “lâu lâu mới sống một lần”!';
+    moneyIntroPool = [
+      `Cung Tài Bạch đóng ${moneyMain}: cày tiền đổ mồ hôi sôi nước mắt mà lúc quẹt thẻ mang phong thái con cưng tỷ phú dầu mỏ — ví chưa kịp ấm đã bay vì câu “đời sống mấy tý”!`,
+      `Thế sao ${moneyMain} cung Tài: tiền đổ về từng chập hoành tráng rồi cũng bốc hơi nhanh như cồn vì cái nết sĩ diện hay giành trả chầu cho thiên hạ!`,
+      `Mệnh tài chính ứng ${moneyMain}: hợp đánh nhanh thắng lớn, nhưng lương vừa về mà không khoá ngay một phần ba vô két sắt là mùng mười đã thở oxy!`,
+    ];
   } else if (taiBachPalace.mainStars.some((s) => ['Cự Môn', 'Thiên Cơ', 'Thiên Đồng', 'Liêm Trinh'].includes(s))) {
-    moneyIntro = 'Tính nhẩm chi tiêu cho cả tháng cực kỳ khoa học trên giấy, tiếc là ngoài đời cứ buồn miệng buồn tay lại tự thưởng lặt vặt thủng cả đáy ví!';
+    moneyIntroPool = [
+      `Cung Tài Bạch hội ${moneyMain}: lập bảng quản lý chi tiêu trên máy tính nhìn chuyên nghiệp như giám đốc tài chính, bước ra đường buồn miệng lại chốt đơn thủng cả đáy bóp!`,
+      `Sao ${moneyMain} kiếm tiền bằng chất xám và cái miệng sắc lẹm: đầu tỉnh thì tiền đầy, cứ thức đêm tự suy rồi mua sắm giải khuây là toang sạch!`,
+      `Túi tiền mang khí ${moneyMain}: số tay làm hàm nhai bằng thực lực, đừng có mơ mộng mấy trò may rủi ngồi mát ăn bát vàng kẻo mất cả chì lẫn chài!`,
+    ];
   } else {
-    moneyIntro = 'Tiền vào cửa trước hay thích đi dạo cửa sau, cứ hễ để dư một khoản là y như rằng có chuyện phát sinh bắt rút hầu bao!';
+    moneyIntroPool = [
+      `Cung Tài Bạch (${moneyMain}): đồng tiền vô cửa trước cứ thích lượn lờ dạo mát ra cửa sau, hễ để dành được một cục là có chuyện trời ơi đất hỡi bắt chi!`,
+      `Thế cung Tài (${moneyMain}): ôm khư khư một nguồn thu dễ dậm chân tại chỗ, chịu khó bung nghề tay trái đúng sở trường lại hốt bạc ngon ơ!`,
+      `Vận túi tiền (${moneyMain}): cơ hội kiếm chác không thiếu, chỉ cần cứng mặt từ chối mấy kèo đóng góp xã giao vô bổ là tài khoản xanh mướt ngay!`,
+    ];
   }
-
-  const moneyDailyPool = [
-    'Hôm nay cấm tiệt trò mở giỏ hàng điện tử để “xem cho vui thôi không mua đâu” — Dobby nhìn thấu bàn tay chuẩn bị bấm thanh toán lúc nửa tỉnh nửa mê của bồ rồi!',
-    'Tài khí hôm nay dặn rõ: đứa nào mở câu “dạo này khoẻ không, cho tao mượn tạm…” thì giả vờ rớt mạng chui xuống gầm bàn thờ Dobby ngay kẻo một đi không trở lại!',
-    'Ví tiền hôm nay ở thế phòng thủ: chi cho cái bụng ăn ngon thì được phước, chứ đầu tư mạo hiểm theo lời rủ rê trên mạng là bay sạch quỹ trà sữa cả quý!',
-    'Điểm sáng tài chính hôm nay: lộc công việc nhờ cái đầu tỉnh táo vẫn ổn áp, miễn đừng tự lấy tiền chữa lành cho mấy nỗi buồn tự nghĩ ra!',
-  ];
-
-  const decrees = [
-    '🧦 Tối hậu thư của Dobby: Tắt thông báo sàn thương mại điện tử, khoá mồm trước 23h và đi ngủ đúng giờ là thắng đời 1–0!',
-    '🧦 Tối hậu thư của Dobby: Giữ chặt ví, giữ lạnh cái đầu, ai rủ tiêu hoang hay luỵ tình hôm nay đều là yêu nghiệt thử lòng!',
-    '🧦 Tối hậu thư của Dobby: Hôm nay lo làm đẹp và kiếm tiền trước, chuyện tình cảm để người khác chạy theo mình chứ cấm chạy theo ai!',
-    '🧦 Tối hậu thư của Dobby: Ăn một bữa tử tế, xoá bớt 3 món vô tri trong giỏ hàng là vận khí tự khắc đổi chiều rực rỡ!',
-  ];
+  const moneyIntro = moneyIntroPool[(daySeed * 5 + tuviSeenMemory.money.size) % moneyIntroPool.length];
+  const moneyDaily = pickUnseenFromPool(TUVI_MONEY_DAILY_100, daySeed * 7 + 13, 'money');
+  const darkDecree = pickUnseenFromPool(TUVI_DECREES_100, daySeed * 11 + 29, 'decree');
 
   const loveScore = 42 + (daySeed * 7) % 51; // 42..92
   const moneyScore = 38 + (daySeed * 11) % 55; // 38..92
@@ -468,9 +519,9 @@ function buildDarkDobbyDailyRoast({
     loveScore,
     moneyScore,
     loveBadge: `💘 Chỉ số Tình Duyên hôm nay: ${loveScore}/100`,
-    loveText: `${loveIntro} ${loveDailyPool[daySeed % loveDailyPool.length]}`,
+    loveText: `${loveIntro} ${loveDaily}`,
     moneyBadge: `💰 Chỉ số Tài Chính hôm nay: ${moneyScore}/100`,
-    moneyText: `${moneyIntro} ${moneyDailyPool[(daySeed + 2) % moneyDailyPool.length]}`,
-    darkDecree: decrees[daySeed % decrees.length],
+    moneyText: `${moneyIntro} ${moneyDaily}`,
+    darkDecree,
   };
 }

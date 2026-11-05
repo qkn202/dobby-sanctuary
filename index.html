@@ -34,7 +34,7 @@
         <span>Phước Tự Do: <strong id="merit-num">18</strong></span>
       </div>
       <button type="button" class="top-chip action-chip" id="btn-reroll-nick">
-        <span id="self-nick-label">🧙 Phù Thuỷ Trốn Họp</span>
+        <span id="self-nick-label">✨ Đang cấp pháp danh...</span>
         <span class="chip-dice" aria-hidden="true">🎲</span>
       </button>
       <button type="button" class="top-chip action-chip" id="btn-sound" aria-pressed="false">
@@ -46,26 +46,27 @@
 
   <output id="breeze-toast" class="breeze-toast" aria-live="polite"></output>
 
-  <!-- NON-MODAL TOP-LAYER RITUAL 1: 108 WOODEN FISH ("GÕ MÕ HẮC HOẢ") WITH DIRECT ANIMATION -->
-  <dialog id="moktak-popover" class="moktak-panel" popover="manual" aria-labelledby="moktak-title">
-    <div class="moktak-head">
-      <h2 id="moktak-title" class="moktak-title">🪵 Mõ Hắc Hoả • 108 Tiếng</h2>
-      <button type="button" class="close-circle" id="moktak-close-btn" aria-label="Đóng bảng gõ mõ">✕</button>
-    </div>
+  <!-- MODAL TOP-LAYER RITUAL 1: 108 WOODEN FISH ("GÕ MÕ HẮC HOẢ") WITH DARK BACKDROP OVERLAY -->
+  <dialog id="moktak-popover" class="sanctuary-dialog moktak-dialog" closedby="any" aria-labelledby="moktak-title">
+    <div class="moktak-panel">
+      <div class="moktak-head">
+        <h2 id="moktak-title" class="moktak-title">🪵 Mõ Hắc Hoả • 108 Tiếng</h2>
+        <button type="button" class="close-circle" id="moktak-close-btn" aria-label="Đóng bảng gõ mõ">✕</button>
+      </div>
 
-    <div class="moktak-meter-row">
-      <p class="moktak-counter"><strong id="moktak-count-val">1</strong> <span>/ 108</span></p>
-      <button type="button" class="moktak-auto-btn" id="moktak-auto-btn" aria-pressed="false">
-        <span id="moktak-auto-icon" aria-hidden="true">▶️</span>
-        <span id="moktak-auto-label">Tự gõ đều</span>
-      </button>
-    </div>
+      <div class="moktak-meter-row">
+        <p class="moktak-counter"><strong id="moktak-count-val">1</strong> <span>/ 108</span></p>
+        <button type="button" class="moktak-auto-btn" id="moktak-auto-btn" aria-pressed="false">
+          <span id="moktak-auto-icon" aria-hidden="true">▶️</span>
+          <span id="moktak-auto-label">Tự gõ đều</span>
+        </button>
+      </div>
 
-    <div class="moktak-progress-track" aria-hidden="true">
-      <div class="moktak-progress-fill" id="moktak-progress-fill"></div>
-    </div>
+      <div class="moktak-progress-track" aria-hidden="true">
+        <div class="moktak-progress-fill" id="moktak-progress-fill"></div>
+      </div>
 
-    <button type="button" class="moktak-stage" id="moktak-strike-btn" aria-label="Gõ một tiếng mõ tịnh tâm">
+      <button type="button" class="moktak-stage" id="moktak-strike-btn" autofocus aria-label="Gõ một tiếng mõ tịnh tâm">
       <span class="moktak-wave-ring ring-a" aria-hidden="true"></span>
       <span class="moktak-wave-ring ring-b" aria-hidden="true"></span>
       <span class="moktak-coc-badge" id="moktak-coc-badge" aria-hidden="true">CỐC! +1</span>
@@ -130,9 +131,10 @@
 
     <p class="moktak-hint">Chạm Mõ, lăn chuột hoặc nhấn phím <kbd>M</kbd> để gõ trực tiếp</p>
 
-    <div class="flavor-card moktak-chant-card" id="moktak-chant-card" aria-live="polite">
-      <strong id="moktak-chant-title">🪵 Tiếng Mõ Xả Bug</strong>
-      <p id="moktak-chant-msg">Cốc một tiếng tâm bất biến giữa dòng đời vạn bug, code chạy êm ru!</p>
+      <div class="flavor-card moktak-chant-card" id="moktak-chant-card" aria-live="polite">
+        <strong id="moktak-chant-title">🪵 Tiếng Mõ Xả Bug</strong>
+        <p id="moktak-chant-msg">Cốc một tiếng tâm bất biến giữa dòng đời vạn bug, code chạy êm ru!</p>
+      </div>
     </div>
   </dialog>
 

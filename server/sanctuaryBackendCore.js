@@ -229,7 +229,7 @@ export async function handleSanctuaryRequest({ method, query = {}, body = {}, en
     const cleanState = {
       ...body.state,
       id: clientId,
-      name: String(body.state.name || '🧙 Phù Thuỷ Trốn Họp').slice(0, 60),
+      name: String(body.state.name || `🧙 Phù Thuỷ #${clientId.slice(-4) || 'TựDo'}`).slice(0, 60),
     };
     bucket.peers.set(clientId, {
       id: clientId,
@@ -348,8 +348,14 @@ export async function handleSanctuaryRequest({ method, query = {}, body = {}, en
     const mode = body.mode === 'place' ? 'place' : 'food';
     const budget = ['low', 'mid', 'high'].includes(body.budget) ? body.budget : 'mid';
     const company = ['solo', 'couple', 'group'].includes(body.company) ? body.company : 'solo';
-    const excludeId = body.excludeId ? String(body.excludeId) : null;
-    const item = pickOracleItem(mode, budget, company, excludeId);
+    const excludeIds = Array.isArray(body.excludeIds)
+      ? body.excludeIds.map((x) => String(x))
+      : body.excludeId
+        ? [String(body.excludeId)]
+        : null;
+    const item = pickOracleItem(mode, budget, company, excludeIds, {
+      scopeKey: `${roomCode}:${clientId || 'anon'}`,
+    });
 
     bucket.stats.totalMerit += 1;
     bucket.stats.totalOracles += 1;

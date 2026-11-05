@@ -674,6 +674,15 @@ export class DobbySanctuaryWorld {
     window.addEventListener('keydown', (e) => {
       const tag = document.activeElement?.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      const openModal = document.querySelector('dialog[open]');
+      if (openModal) {
+        this.keys.clear();
+        if (openModal.id === 'moktak-popover' && e.code === 'KeyM') {
+          e.preventDefault();
+          this.onMoktakStrike?.();
+        }
+        return;
+      }
       if (
         ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyQ', 'KeyE', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(
           e.code,
