@@ -1,0 +1,21 @@
+{
+  "name": "dobby-sanctuary",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5179",
+    "build": "vite build",
+    "preview": "vite preview --port 4179"
+  },
+  "dependencies": {
+    "@oddbird/popover-polyfill": "^0.6.0",
+    "@supabase/supabase-js": "^2.119.0",
+    "temporal-polyfill": "^1.0.8",
+    "three": "^0.170.0",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0"
+  }
+}

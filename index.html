@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đền Giáo Chủ Dobby • Sảnh Vườn Nắng Sớm</title>
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <main id="sanctuary-main" aria-label="Không gian 3D Sảnh Vườn Đền Dobby Tự Do">
+    <canvas id="webgl-canvas"></canvas>
+    <div class="sun-vignette" aria-hidden="true"></div>
+    <div id="labels-layer"></div>
+  </main>
+
+  <header class="hud-top">
+    <div class="room-pill">
+      <div class="sock-logo" aria-hidden="true">🧦</div>
+      <div>
+        <h1 class="room-title">Đền Giáo Chủ Dobby • Sảnh Vườn Nắng #1</h1>
+        <p class="room-sub">
+          <span class="online-dot" aria-hidden="true"></span>
+          <span id="online-status">7 phù thuỷ đang ngồi chill • Không khung chat</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="hud-right">
+      <div class="top-chip merit-badge" aria-live="polite">
+        <span aria-hidden="true">✨</span>
+        <span>Phước Tự Do: <strong id="merit-num">18</strong></span>
+      </div>
+      <button type="button" class="top-chip action-chip" id="btn-reroll-nick">
+        <span id="self-nick-label">🧙 Phù Thuỷ Trốn Họp</span>
+        <span class="chip-dice" aria-hidden="true">🎲</span>
+      </button>
+      <button type="button" class="top-chip action-chip" id="btn-sound" aria-pressed="false">
+        <span id="sound-icon" aria-hidden="true">🔇</span>
+        <span id="sound-label">Chuông gió</span>
+      </button>
+    </div>
+  </header>
+
+  <output id="breeze-toast" class="breeze-toast" aria-live="polite"></output>
+
+  <!-- NON-MODAL TOP-LAYER RITUAL 1: 108 WOODEN FISH ("GÕ MÕ HẮC HOẢ") WITH DIRECT ANIMATION -->
+  <dialog id="moktak-popover" class="moktak-panel" popover="manual" aria-labelledby="moktak-title">
+    <div class="moktak-head">
+      <h2 id="moktak-title" class="moktak-title">🪵 Mõ Hắc Hoả • 108 Tiếng</h2>
+      <button type="button" class="close-circle" id="moktak-close-btn" aria-label="Đóng bảng gõ mõ">✕</button>
+    </div>
+
+    <div class="moktak-meter-row">
+      <p class="moktak-counter"><strong id="moktak-count-val">1</strong> <span>/ 108</span></p>
+      <button type="button" class="moktak-auto-btn" id="moktak-auto-btn" aria-pressed="false">
+        <span id="moktak-auto-icon" aria-hidden="true">▶️</span>
+        <span id="moktak-auto-label">Tự gõ đều</span>
+      </button>
+    </div>
+
+    <div class="moktak-progress-track" aria-hidden="true">
+      <div class="moktak-progress-fill" id="moktak-progress-fill"></div>
+    </div>
+
+    <button type="button" class="moktak-stage" id="moktak-strike-btn" aria-label="Gõ một tiếng mõ tịnh tâm">
+      <span class="moktak-wave-ring ring-a" aria-hidden="true"></span>
+      <span class="moktak-wave-ring ring-b" aria-hidden="true"></span>
+      <span class="moktak-coc-badge" id="moktak-coc-badge" aria-hidden="true">CỐC! +1</span>
+
+      <svg class="moktak-svg" viewBox="0 0 220 176" aria-hidden="true">
+        <defs>
+          <radialGradient id="mokWoodGrad" cx="42%" cy="32%" r="65%">
+            <stop offset="0%" stop-color="#9a4a24" />
+            <stop offset="52%" stop-color="#682e12" />
+            <stop offset="100%" stop-color="#3b1707" />
+          </radialGradient>
+          <linearGradient id="mokCushionGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#e11d48" />
+            <stop offset="100%" stop-color="#9f1239" />
+          </linearGradient>
+          <radialGradient id="mokMalletBall" cx="35%" cy="30%" r="68%">
+            <stop offset="0%" stop-color="#fef08a" />
+            <stop offset="65%" stop-color="#f59e0b" />
+            <stop offset="100%" stop-color="#b45309" />
+          </radialGradient>
+        </defs>
+
+        <!-- Crimson & Gold Temple Cushion -->
+        <g class="svg-cushion">
+          <ellipse cx="102" cy="148" rx="68" ry="15" fill="rgba(67, 40, 24, 0.18)" />
+          <rect x="40" y="126" width="124" height="22" rx="11" fill="url(#mokCushionGrad)" stroke="#fbbf24" stroke-width="2.5" />
+          <path d="M52 137 H152" stroke="#fde68a" stroke-width="2" stroke-dasharray="6 5" opacity="0.85" />
+        </g>
+
+        <!-- Sculpted Wooden Fish ("Mõ Gỗ Hắc Mộc") -->
+        <g class="svg-fish-group" id="svg-moktak-fish">
+          <!-- Carved tail loop -->
+          <circle cx="44" cy="98" r="14" fill="none" stroke="#4c1f0a" stroke-width="9" />
+          <!-- Main hollow wood body -->
+          <ellipse cx="102" cy="96" rx="56" ry="42" fill="url(#mokWoodGrad)" stroke="#2c1004" stroke-width="2.5" />
+          <!-- Warm top sheen arc -->
+          <path d="M64 74 Q102 54 138 74" fill="none" stroke="rgba(255, 228, 196, 0.28)" stroke-width="5" stroke-linecap="round" />
+          <!-- Carved resonant slit & hollow cavity -->
+          <path d="M62 103 Q106 113 153 99" fill="none" stroke="#160702" stroke-width="8.5" stroke-linecap="round" />
+          <circle cx="63" cy="102" r="7.5" fill="#160702" />
+          <!-- Decorative carved scale & emerald mystic crest -->
+          <ellipse cx="102" cy="56" rx="16" ry="6" fill="#34d399" stroke="#fde047" stroke-width="2.2" />
+          <circle cx="124" cy="83" r="5" fill="#fde68a" opacity="0.85" />
+          <circle cx="124" cy="83" r="2.2" fill="#2c1004" />
+        </g>
+
+        <!-- Impact Spark Rays -->
+        <g class="svg-impact-sparks">
+          <line x1="102" y1="44" x2="102" y2="26" stroke="#10b981" stroke-width="3" stroke-linecap="round" />
+          <line x1="84" y1="48" x2="71" y2="35" stroke="#f59e0b" stroke-width="3" stroke-linecap="round" />
+          <line x1="120" y1="48" x2="133" y2="35" stroke="#34d399" stroke-width="3" stroke-linecap="round" />
+        </g>
+
+        <!-- Poised Wooden Mallet ("Dùi Gõ Mõ") -->
+        <g class="svg-mallet-group" id="svg-moktak-mallet">
+          <line x1="188" y1="120" x2="128" y2="48" stroke="#b45309" stroke-width="8.5" stroke-linecap="round" />
+          <line x1="188" y1="120" x2="173" y2="102" stroke="#78350f" stroke-width="11" stroke-linecap="round" />
+          <circle cx="124" cy="44" r="15.5" fill="url(#mokMalletBall)" stroke="#78350f" stroke-width="2" />
+        </g>
+      </svg>
+    </button>
+
+    <p class="moktak-hint">Chạm Mõ, lăn chuột hoặc nhấn phím <kbd>M</kbd> để gõ trực tiếp</p>
+
+    <div class="flavor-card moktak-chant-card" id="moktak-chant-card" aria-live="polite">
+      <strong id="moktak-chant-title">🪵 Tiếng Mõ Xả Bug</strong>
+      <p id="moktak-chant-msg">Cốc một tiếng tâm bất biến giữa dòng đời vạn bug, code chạy êm ru!</p>
+    </div>
+  </dialog>
+
+  <!-- MODAL RITUAL 2A: XIN QUẺ "HÔM NAY ĂN GÌ" & "HÔM NAY ĐI ĐÂU" (FILTER + SHAKE ORACLE) -->
+  <dialog id="oracle-shake-dialog" class="sanctuary-dialog oracle-dialog" closedby="any" aria-labelledby="oracle-dialog-title">
+    <div class="oracle-shell">
+      <div class="card-banner">
+        <div class="card-banner-top">
+          <p class="card-rank" id="oracle-mode-kicker">🍜 QUẺ ẨM THỰC HẮC HOẢ</p>
+          <button type="button" class="close-circle close-dark" data-close-dialog="oracle-shake-dialog" aria-label="Đóng bảng xin quẻ">✕</button>
+        </div>
+        <h2 id="oracle-dialog-title">Hôm nay ăn gì</h2>
+      </div>
+
+      <div class="dialog-scroll-body">
+        <div class="oracle-filters">
+          <fieldset class="filter-fieldset">
+            <legend class="field-label">💰 Ngân sách dự kiến</legend>
+            <div class="pill-radio-group">
+              <label class="filter-pill">
+                <input type="radio" class="visually-hidden" name="oracle-budget" value="low" />
+                <span>🍃 Mỏng ví (&lt;60k)</span>
+              </label>
+              <label class="filter-pill">
+                <input type="radio" class="visually-hidden" name="oracle-budget" value="mid" checked />
+                <span>⚖️ Vừa túi (60–180k)</span>
+              </label>
+              <label class="filter-pill">
+                <input type="radio" class="visually-hidden" name="oracle-budget" value="high" />
+                <span>💎 Xả láng (200k+)</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset class="filter-fieldset">
+            <legend class="field-label">👥 Đi 1 mình hay tụ tập</legend>
+            <div class="pill-radio-group">
+              <label class="filter-pill">
+                <input type="radio" class="visually-hidden" name="oracle-company" value="solo" checked />
+                <span>🧘 Đi 1 mình</span>
+              </label>
+              <label class="filter-pill">
+                <input type="radio" class="visually-hidden" name="oracle-company" value="couple" />
+                <span>🕯️ Đi 2 người</span>
+              </label>
+              <label class="filter-pill">
+                <input type="radio" class="visually-hidden" name="oracle-company" value="group" />
+                <span>🍻 Tụ tập đông</span>
+              </label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="oracle-cta-box" id="oracle-cta-box">
+          <p class="shake-prompt" id="oracle-stage-prompt">
+            Chọn ngân sách &amp; đi 1 mình hay tụ tập, rồi bấm lắc ống xăm để Giáo Chủ Dobby phán thẳng không nể nang!
+          </p>
+          <button type="button" class="pastel-cta cta-dark-oracle full-width" id="btn-shake-oracle" autofocus>
+            🎋 Lắc Ống Xăm Xin Quẻ
+          </button>
+        </div>
+
+        <!-- STAGE 2: ONLY SHOWN AFTER CLICKING SHAKE -> PLAYS "LẮC QUẺ" THEN "RỚT QUẺ" -->
+        <div class="oracle-anim-stage" id="oracle-anim-stage" hidden aria-live="polite">
+          <svg class="oracle-ritual-svg" viewBox="0 0 320 198" aria-hidden="true">
+            <defs>
+              <linearGradient id="bambooCylGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#3b1d5e" />
+                <stop offset="48%" stop-color="#581c87" />
+                <stop offset="100%" stop-color="#1e1b4b" />
+              </linearGradient>
+              <linearGradient id="stickGoldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#fde047" />
+                <stop offset="78%" stop-color="#f59e0b" />
+                <stop offset="79%" stop-color="#e11d48" />
+                <stop offset="100%" stop-color="#be123c" />
+              </linearGradient>
+              <linearGradient id="velvetMatGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#9f1239" />
+                <stop offset="100%" stop-color="#4c0519" />
+              </linearGradient>
+            </defs>
+
+            <!-- Crimson & Gold Velvet Landing Cushion ("Chiếu Đỏ Đón Quẻ") -->
+            <ellipse cx="222" cy="172" rx="74" ry="15" fill="rgba(67, 40, 24, 0.16)" />
+            <ellipse cx="222" cy="167" rx="68" ry="13" fill="url(#velvetMatGrad)" stroke="#fbbf24" stroke-width="2" />
+            <ellipse cx="222" cy="167" rx="54" ry="8.5" fill="none" stroke="rgba(253, 230, 138, 0.55)" stroke-width="1.2" stroke-dasharray="5 4" />
+
+            <!-- Landing Impact Ripple on Cushion -->
+            <ellipse class="svg-land-ripple" cx="222" cy="166" rx="34" ry="8" fill="none" stroke="#34d399" stroke-width="2.5" />
+
+            <!-- Left Shadow under Oracle Cylinder -->
+            <ellipse cx="96" cy="171" rx="40" ry="9" fill="rgba(67, 40, 24, 0.2)" />
+
+            <!-- Shaking & Tilting Oracle Cylinder ("Ống Xăm Hắc Hoả") -->
+            <g class="svg-cylinder-rig">
+              <g class="svg-sticks-bundle">
+                <rect x="74" y="38" width="7.5" height="62" rx="3.5" fill="#fcd34d" transform="rotate(-10 78 80)" />
+                <rect x="85" y="33" width="7.5" height="65" rx="3.5" fill="#fbbf24" transform="rotate(-3 89 80)" />
+                <rect x="96" y="31" width="7.5" height="66" rx="3.5" fill="#fde047" transform="rotate(2 100 80)" />
+                <rect x="106" y="34" width="7.5" height="64" rx="3.5" fill="#f59e0b" transform="rotate(6 110 80)" />
+                <rect x="115" y="39" width="7.5" height="60" rx="3.5" fill="#fcd34d" transform="rotate(12 118 80)" />
+              </g>
+
+              <g class="svg-shake-sparks">
+                <circle cx="64" cy="48" r="3.2" fill="#34d399" />
+                <circle cx="132" cy="44" r="3.5" fill="#fbbf24" />
+                <circle cx="98" cy="22" r="3" fill="#a78bfa" />
+              </g>
+
+              <rect x="64" y="74" width="64" height="94" rx="13" fill="url(#bambooCylGrad)" stroke="#34d399" stroke-width="2.6" />
+              <ellipse cx="96" cy="75" rx="32" ry="7.5" fill="#18122b" stroke="#6ee7b7" stroke-width="2" />
+              <rect x="64" y="108" width="64" height="22" fill="rgba(16, 185, 129, 0.24)" />
+              <text x="96" y="123" text-anchor="middle" fill="#fde68a" font-size="12" font-weight="900">ỐNG XĂM</text>
+            </g>
+
+            <!-- Ejecting & Falling Chosen Stick ("Thẻ Quẻ Rớt Xuống Chiếu") -->
+            <g class="svg-falling-stick">
+              <rect x="176" y="158" width="92" height="13" rx="6.5" fill="url(#stickGoldGrad)" stroke="#fef08a" stroke-width="1.6" />
+              <text x="213" y="167.5" text-anchor="middle" fill="#432818" font-size="7.8" font-weight="900">THƯỢNG QUẺ</text>
+            </g>
+          </svg>
+          <p class="oracle-anim-caption" id="oracle-anim-caption">🎋 Đang xóc ống xăm triệu hồi Giáo Chủ Dobby...</p>
+        </div>
+
+        <section class="oracle-result-card" id="oracle-result-card" hidden aria-live="polite">
+          <div class="oracle-result-head">
+            <img
+              id="oracle-portrait-img"
+              class="mini-dobby-avatar"
+              alt="Chân dung Giáo Chủ Dobby Hắc Ám"
+              width="64"
+              height="64"
+            />
+            <div>
+              <p class="oracle-result-code" id="oracle-code">✨ QUẺ ĂN #01 • CỨU ĐÓI HẮC HOẢ ✨</p>
+              <h3 class="oracle-pick-title" id="oracle-pick-title">🍲 Bún Bò Huế Đặc Biệt</h3>
+            </div>
+          </div>
+
+          <p class="oracle-meta-tags" id="oracle-meta-tags">💸 65k – 95k • 🧘 Ngồi quầy riêng tư</p>
+
+          <div class="dobby-roast-bubble">
+            <span class="roast-tag">🔮 Lời phán của Dobby</span>
+            <p id="oracle-roast"></p>
+          </div>
+
+          <blockquote class="card-poem" id="oracle-poem"></blockquote>
+          <p class="lucky-snack" id="oracle-tip"></p>
+
+          <div class="cta-row full-width">
+            <button type="button" class="pastel-cta cta-peach" id="btn-reroll-oracle">
+              🎋 Lắc Lại Quẻ Khác
+            </button>
+            <button type="button" class="pastel-cta cta-mint" id="btn-download-oracle">
+              📸 Tải Thẻ PNG
+            </button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- MODAL RITUAL 2B: XIN QUẺ "LÁ SỐ TỬ VI" (CHỈ SỐ TÌNH DUYÊN, TÀI CHÍNH & TỐI HẬU THƯ DOBBY) -->
+  <dialog id="tuvi-dialog" class="sanctuary-dialog tuvi-dialog" closedby="any" aria-labelledby="tuvi-dialog-title">
+    <div class="tuvi-shell">
+      <div class="card-banner">
+        <div class="card-banner-top">
+          <p class="card-rank">☯️ TỬ VI HÔM NAY • PHÁN THẲNG KHÔNG NỂ NANG</p>
+          <button type="button" class="close-circle close-dark" data-close-dialog="tuvi-dialog" aria-label="Đóng bảng lá số tử vi">✕</button>
+        </div>
+        <h2 id="tuvi-dialog-title">Lá số tử vi</h2>
+      </div>
+
+      <div class="dialog-scroll-body tuvi-scroll-body">
+        <form id="tuvi-form" class="tuvi-form" novalidate>
+          <div class="tuvi-form-grid">
+            <div class="field-block">
+              <label for="tuvi-dob" class="field-label">
+                📅 Ngày sinh Dương lịch <span class="req-star" aria-hidden="true">*</span>
+              </label>
+              <input
+                type="date"
+                id="tuvi-dob"
+                name="dob"
+                class="date-input"
+                min="1930-01-01"
+                max="2026-12-31"
+                required
+                aria-errormessage="tuvi-dob-error"
+              />
+              <p id="tuvi-dob-error" class="field-error" aria-live="polite">
+                <span class="err-icon" aria-hidden="true">⚠️</span>
+                <span>Nhập ngày sinh Dương lịch trước đã phù thuỷ, Dobby không bói mò bằng không khí!</span>
+              </p>
+            </div>
+
+            <fieldset class="filter-fieldset gender-fieldset">
+              <legend class="field-label">⚧️ Giới tính</legend>
+              <div class="pill-radio-group">
+                <label class="filter-pill">
+                  <input type="radio" class="visually-hidden" name="tuvi-gender" value="nam" checked />
+                  <span>🧙‍♂️ Nam</span>
+                </label>
+                <label class="filter-pill">
+                  <input type="radio" class="visually-hidden" name="tuvi-gender" value="nu" />
+                  <span>🧙‍♀️ Nữ</span>
+                </label>
+              </div>
+            </fieldset>
+          </div>
+
+          <button type="submit" class="pastel-cta cta-dark-oracle full-width" id="btn-submit-tuvi">
+            ☯️ Xem Chỉ Số &amp; Tối Hậu Thư Của Dobby
+          </button>
+        </form>
+
+        <section id="tuvi-result-section" class="tuvi-result-section" hidden aria-live="polite">
+          <div class="tuvi-roast-grid">
+            <article class="tuvi-roast-card roast-love">
+              <h3 id="tuvi-love-badge">💘 Chỉ số Tình Duyên hôm nay</h3>
+              <div class="tuvi-score-track" aria-hidden="true">
+                <div class="tuvi-score-fill fill-love" id="tuvi-love-fill"></div>
+              </div>
+              <p id="tuvi-love-text"></p>
+            </article>
+            <article class="tuvi-roast-card roast-money">
+              <h3 id="tuvi-money-badge">💰 Chỉ số Tài Chính hôm nay</h3>
+              <div class="tuvi-score-track" aria-hidden="true">
+                <div class="tuvi-score-fill fill-money" id="tuvi-money-fill"></div>
+              </div>
+              <p id="tuvi-money-text"></p>
+            </article>
+          </div>
+
+          <div class="tuvi-decree-bar">
+            <p id="tuvi-dark-decree"></p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </dialog>
+
+  <footer class="hud-bottom">
+    <nav class="toy-dock" aria-label="Nghi thức giải khuây tại Đền Dobby">
+      <button type="button" class="dock-btn is-active" id="btn-sit">
+        <span class="dock-icon ic-mint" aria-hidden="true">🧘</span>
+        <span class="dock-label">Ngồi Đệm Chill</span>
+      </button>
+      <button type="button" class="dock-btn" id="btn-bow">
+        <span class="dock-icon ic-sky" aria-hidden="true">🙇</span>
+        <span class="dock-label">Cúi Chào</span>
+      </button>
+      <button type="button" class="dock-btn" id="btn-moktak">
+        <span class="dock-icon ic-pink" id="dock-moktak-icon" aria-hidden="true">🪵</span>
+        <span class="dock-label">Gõ Mõ 108</span>
+      </button>
+      <button type="button" class="dock-btn" id="btn-fortune" popovertarget="fortune-menu-popover">
+        <span class="dock-icon ic-lav" aria-hidden="true">🔮</span>
+        <span class="dock-label">Xin Quẻ</span>
+      </button>
+
+      <div id="fortune-menu-popover" popover="auto" class="fortune-menu-popover" aria-label="Chọn kiểu Xin Quẻ">
+        <p class="fortune-menu-kicker">🔮 Xin Quẻ Giáo Chủ Dobby</p>
+        <button type="button" class="fortune-menu-item" data-xin-que="food">
+          <span class="menu-item-icon ic-peach" aria-hidden="true">🍜</span>
+          <span class="menu-item-copy">
+            <strong>Hôm nay ăn gì</strong>
+            <small>Lắc ống xăm chốt món theo ví &amp; hội</small>
+          </span>
+        </button>
+        <button type="button" class="fortune-menu-item" data-xin-que="place">
+          <span class="menu-item-icon ic-sky" aria-hidden="true">🧭</span>
+          <span class="menu-item-copy">
+            <strong>Hôm nay đi đâu</strong>
+            <small>Lắc quẻ tìm chốn dạo chơi hợp túi</small>
+          </span>
+        </button>
+        <button type="button" class="fortune-menu-item" data-xin-que="tuvi">
+          <span class="menu-item-icon ic-lav" aria-hidden="true">☯️</span>
+          <span class="menu-item-copy">
+            <strong>Lá số tử vi</strong>
+            <small>Tình duyên, tài chính &amp; tối hậu thư Dobby</small>
+          </span>
+        </button>
+      </div>
+    </nav>
+    <p class="controls-hint">
+      🖱️ Kéo chuột xoay 360° • Lăn chuột thu phóng • Q/E xoay ngang • WASD / chạm sàn dạo bước • Phím M gõ mõ
+    </p>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
